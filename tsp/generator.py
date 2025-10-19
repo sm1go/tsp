@@ -1,33 +1,45 @@
-import csv 
-import random 
-from typing import List, Tuple 
+import random
+from typing import List, Tuple
+import os
 
 City = Tuple[int, float, float]
 
-def generate_unique_points(n: int, x_max: int = 1000, y_max: int = 1000, seed: int = None) -> List[City]:
+
+def generate_unique_points(n: int, x_max: int = 2000, y_max: int = 2000, seed: int = None) -> List[City]:
     if seed is not None:
         random.seed(seed)
-    if n > x_max * y_max:
-        raise ValueError("Too many points for a specific range.")
-    all_indices = list(range(x_max * y_max))
-    chosen = random.sample(all_indices, n)
-    pts = [(i, idx % x_max, idx // x_max) for i, idx in enumerate(chosen)]
-    return [(i, float(x), float(y)) for i, x, y in pts]
+
+    points = set()
+    while len(points) < n:
+        x = random.randint(0, x_max)
+        y = random.randint(0, y_max)
+        points.add((x, y))
+
+    return [(i + 1, float(x), float(y)) for i, (x, y) in enumerate(points)]
+
 
 def write_instance(cities: List[City], filename: str):
-    with open(filename, 'w', newline='') as f: 
-        writer = csv.writer(f)
-        writer.writerow(['id', 'x', 'y'])
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, "w") as f:
+        f.write(f"{len(cities)}\n")
         for cid, x, y in cities:
-            writer.writerow([cid, f"{x:.3f}", f"{y:.3f}"])
+            f.write(f"{cid} {int(x)} {int(y)}\n")
+    print(f"Instance saved: {filename}")
 
 
 def read_instance(filename: str) -> List[Tuple[float, float]]:
+    with open(filename, "r") as f:
+        lines = f.readlines()
+
+    n = int(lines[0].strip())
     points = []
-    with open(filename, newline='') as f:
-        reader = csv.DictReader(f)
-        for row in reader: 
-            points.append((float(row['x']), float(row['y'])))
-        return points
+    for line in lines[1:]:
+        parts = line.strip().split()
+        if len(parts) == 3:
+            _, x, y = parts
+            points.append((float(x), float(y)))
 
+    if len(points) != n:
+        raise ValueError("Error: Number of points does not match.")
 
+    return points
