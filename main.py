@@ -3,24 +3,20 @@ from tsp.greedy import nearest_neighbor
 from tsp.utils import tour_length
 
 def main():
-    # 📍 Parametry
-    n = 29
-    path = "data/instances/tsp_29.txt"
+    n = 100
+    path = "data/instances/tsp_100.txt"
 
-    # 1️⃣ Generowanie instancji
     cities = generate_unique_points(n, x_max=2000, y_max=2300, seed=42)
     write_instance(cities, path)
 
-    # 2️⃣ Wczytanie instancji
     points = read_instance(path)
 
-    # 3️⃣ Algorytm zachłanny
     tour = nearest_neighbor(points)
     length = tour_length(points, tour)
 
-    print("\n Zachłanny TSP (Nearest Neighbor):")
-    print("Trasa:", " -> ".join(str(i + 1) for i in tour))
-    print(f"Długość trasy: {length:.2f}")
+    print("\n TSP (Nearest Neighbor):")
+    print("Tour:", " -> ".join(str(i + 1) for i in tour))
+    print(f"Tour length: {length:.2f}")
 
 if __name__ == "__main__":
     main()
