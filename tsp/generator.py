@@ -7,7 +7,7 @@ City = Tuple[int, float, float]
 
 def generate_unique_points(n: int, x_max: int = 2000, y_max: int = 2000, seed: int = None) -> List[City]:
     if seed is not None:
-        random.seed(seed)
+        random.seed(42)
 
     points = set()
     while len(points) < n:
