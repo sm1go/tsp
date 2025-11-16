@@ -4,10 +4,9 @@ from tsp.utils import euclidean, tour_length
 Point = Tuple[float, float]
 
 def nearest_neighbor(points: List[Point]) -> List[int]:
-    """Zachłanny algorytm TSP (Nearest Neighbor)."""
     n = len(points)
     unvisited = set(range(n))
-    tour = [0]  # start z miasta 0
+    tour = [0]
     unvisited.remove(0)
     current = 0
 
