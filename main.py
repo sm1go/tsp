@@ -64,18 +64,15 @@ def main():
     print(f"2-opt:            {len_2opt:.2f}")
     save_result_to_csv("eksperymenty.csv", instance_name, "2-opt", len_2opt, time_2opt)
 
-    # --- 3. Simulated Annealing (Rozdzielone wyniki) ---
     start_mode = "RANDOM" if args.random else "NN"
     print(f"\n--- Uruchamianie SA (Start: {start_mode}) ---")
     
-    # A. Przygotowanie trasy startowej
     if args.random:
         tour_start = list(range(len(points)))
         random.shuffle(tour_start)
     else:
         tour_start = tour_nn[:]
 
-    # B. Uruchomienie "Czystego" SA
     start_sa = time.time()
     tour_sa_raw = simulated_annealing(
         points, 
@@ -91,10 +88,9 @@ def main():
     params_raw = f"T={args.temp}, rate={args.rate}, start={start_mode}"
     save_result_to_csv("eksperymenty.csv", instance_name, "Simulated Annealing (Raw)", len_sa_raw, time_sa_raw, params_raw)
 
-    # C. Hybrydyzacja (Poprawianie wyniku SA algorytmem 2-opt)
     start_hybrid = time.time()
     tour_sa_hybrid = two_opt(points, tour_sa_raw)
-    time_hybrid_total = (time.time() - start_hybrid) + time_sa_raw # Czas sumaryczny (SA + 2opt)
+    time_hybrid_total = (time.time() - start_hybrid) + time_sa_raw 
     len_sa_hybrid = tour_length(points, tour_sa_hybrid)
 
     print(f"SA + Hybrid:      {len_sa_hybrid:.2f}")
