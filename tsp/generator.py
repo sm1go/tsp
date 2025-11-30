@@ -1,13 +1,12 @@
 import random
-from typing import List, Tuple
 import os
+from typing import List, Tuple
 
 City = Tuple[int, float, float]
 
-
 def generate_unique_points(n: int, x_max: int = 2000, y_max: int = 2000, seed: int = None) -> List[City]:
     if seed is not None:
-        random.seed(42)
+        random.seed(seed)
 
     points = set()
     while len(points) < n:
@@ -35,11 +34,10 @@ def read_instance(filename: str) -> List[Tuple[float, float]]:
     points = []
     for line in lines[1:]:
         parts = line.strip().split()
-        if len(parts) == 3:
-            _, x, y = parts
-            points.append((float(x), float(y)))
+        if len(parts) >= 3:
+            points.append((float(parts[1]), float(parts[2])))
 
     if len(points) != n:
-        raise ValueError("Error: Number of points does not match.")
+        raise ValueError("Error: Number of points does not match header.")
 
     return points
