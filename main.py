@@ -46,7 +46,6 @@ def main():
     instance_name = os.path.basename(args.file)
     print(f"--- EKSPERYMENT: {instance_name} (Liczba miast: {len(points)}) ---")
 
-    # --- 1. Nearest Neighbor ---
     start = time.time()
     tour_nn = nearest_neighbor(points)
     time_nn = time.time() - start
@@ -55,7 +54,6 @@ def main():
     print(f"NN (Greedy):      {len_nn:.2f}")
     save_result_to_csv("eksperymenty.csv", instance_name, "Nearest Neighbor", len_nn, time_nn)
 
-    # --- 2. 2-opt (Local Search) ---
     start = time.time()
     tour_2opt = two_opt(points, tour_nn)
     time_2opt = time.time() - start
