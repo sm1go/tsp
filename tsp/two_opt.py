@@ -1,27 +1,28 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # dodaje tsp_project
-from tsp.utils import tour_length
+from tsp.utils import euclidean
 
 def two_opt(points, tour):
+    best_tour = tour[:]
     improved = True
-    best = tour
-    best_distance = tour_length(points, best)
-
+    n = len(points)
+    
     while improved:
         improved = False
-        for i in range(1, len(best) - 2):
-            for j in range(i + 1, len(best)):
-                if j - i == 1:
-                    continue
-                new_tour = best[:]
-                new_tour[i:j] = reversed(new_tour[i:j])
-                new_distance = tour_length(points, new_tour)
-                if new_distance < best_distance:
-                    best = new_tour
-                    best_distance = new_distance
+        for i in range(n - 1):
+            for j in range(i + 2, n):
+                if j == n - 1 and i == 0: 
+                    continue 
+                
+                p1, p2 = points[best_tour[i]], points[best_tour[i+1]]
+                p3, p4 = points[best_tour[j]], points[best_tour[(j+1) % n]]
+                
+                current_dist = euclidean(p1, p2) + euclidean(p3, p4)
+                new_dist = euclidean(p1, p3) + euclidean(p2, p4)
+                
+                if new_dist < current_dist:
+                    best_tour[i+1 : j+1] = reversed(best_tour[i+1 : j+1])
                     improved = True
-                    break
+                    break 
             if improved:
                 break
-    return best
+                
+    return best_tour
